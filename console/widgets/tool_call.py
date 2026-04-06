@@ -31,7 +31,7 @@ class ToolCall(containers.VerticalGroup):
         else:
             icon = Content.styled("▶ ", "dim")
 
-        header = Content.assemble(icon, "🔧 ", self.tool_name)
+        header = Content.assemble(icon, Content.styled("Tool ", "bold"), self.tool_name)
 
         if self.tool_status == "pending":
             header += Content.assemble(" ⌛")

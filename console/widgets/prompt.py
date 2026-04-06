@@ -13,8 +13,9 @@ class PromptInput(TextArea):
     ]
 
     def __init__(self) -> None:
-        super().__init__(language=None)
+        super().__init__(language=None, placeholder="Ask anything...")
         self.show_line_numbers = False
+        self.tab_behavior = "focus"
 
     def on_mount(self) -> None:
         self.highlight_cursor_line = False

@@ -41,18 +41,31 @@ AgentResponse {
     height: auto;
 }
 
+/* Error messages */
+.error-msg {
+    margin: 1 0 0 1;
+    color: $error;
+}
+
 /* Agent thought */
 AgentThought {
-    background: $primary-muted 20%;
-    margin: 1 0 0 1;
-    padding: 0 1;
-    max-height: 10;
-    overflow-y: auto;
-    scrollbar-visibility: hidden;
-    &.-loading {
-        background: transparent;
+    margin: 0 0 0 1;
+    height: auto;
+
+    Collapsible {
+        border-left: tall #555555;
+        padding: 0 0 0 1;
+    }
+
+    CollapsibleTitle {
+        color: $text-muted;
+        text-style: italic;
         padding: 0;
-        margin: 0;
+    }
+
+    Static {
+        color: $text-muted;
+        text-style: italic;
     }
 }
 
@@ -77,6 +90,26 @@ ToolCall {
     &.-expanded #tool-content {
         display: block;
     }
+}
+
+/* Welcome */
+#welcome {
+    content-align: center middle;
+    text-align: center;
+    color: $text-muted;
+    width: 100%;
+    margin: 2 0;
+}
+
+/* Session bar */
+#session-bar {
+    dock: bottom;
+    width: 100%;
+    height: 1;
+    text-align: right;
+    color: $text-muted;
+    padding: 0 2;
+    text-style: dim;
 }
 
 /* Prompt bar at bottom */

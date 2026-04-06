@@ -1,21 +1,20 @@
-from textual.reactive import var
-from textual.widgets import Markdown
-from textual.widgets.markdown import MarkdownStream
+from textual.containers import VerticalGroup
+from textual.widgets import Collapsible, Static
 
 
-class AgentThought(Markdown):
-    _stream: var[MarkdownStream | None] = var(None)
+class AgentThought(VerticalGroup):
+    def __init__(self) -> None:
+        super().__init__()
+        self._text = ""
+        self._body = Static("", markup=False)
 
-    def watch_loading(self, loading: bool) -> None:
-        self.set_class(loading, "-loading")
+    def compose(self):
+        self._collapsible = Collapsible(self._body, title="Thinking", collapsed=False)
+        yield self._collapsible
 
-    @property
-    def stream(self) -> MarkdownStream:
-        if self._stream is None:
-            self._stream = self.get_stream(self)
-        return self._stream
+    def append_text(self, text: str) -> None:
+        self._text += text
+        self._body.update(self._text)
 
-    async def append_fragment(self, fragment: str) -> None:
-        self.loading = False
-        await self.stream.write(fragment)
-        self.scroll_end()
+    def collapse(self) -> None:
+        self._collapsible.collapsed = True
