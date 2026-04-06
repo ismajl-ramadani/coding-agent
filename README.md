@@ -39,3 +39,16 @@ See token usage, tool executions, and underlying system traces by adding the `--
 ```bash
 uv run main.py --verbose "write a simple hello world script"
 ```
+
+**Sessions:**
+The agent automatically saves conversation sessions in the `.sessions/` directory.
+
+Resume the most recent session:
+```bash
+uv run main.py --resume
+```
+
+Resume a specific session by ID:
+```bash
+uv run main.py --session-id session_YYYYMMDD_HHMMSS
+```

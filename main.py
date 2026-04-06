@@ -7,6 +7,7 @@ from prompts import system_prompt
 import argparse
 from call_function import available_functions, call_function
 import sys
+from session_manager import get_new_session_id, get_latest_session_id, load_session, save_session
 
 load_dotenv()
 
@@ -21,12 +22,34 @@ def main():
     parser = argparse.ArgumentParser(description="Chatbot")
     parser.add_argument("user_prompt", type=str, nargs="?", default=None, help="User prompt")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
+    parser.add_argument("--resume", action="store_true", help="Resume the latest session")
+    parser.add_argument("--session-id", type=str, help="Resume a specific session ID")
     args = parser.parse_args()
 
     client = genai.Client(api_key=api_key)
 
     messages = []
+    current_session_id = None
     initial_prompt = args.user_prompt
+
+    if args.session_id:
+        current_session_id = args.session_id
+        try:
+            messages = load_session(current_session_id)
+            print(f"Resumed session: {current_session_id}")
+        except FileNotFoundError:
+            print(f"Error: Session {current_session_id} not found.")
+            sys.exit(1)
+    elif args.resume:
+        current_session_id = get_latest_session_id()
+        if current_session_id:
+            messages = load_session(current_session_id)
+            print(f"Resumed latest session: {current_session_id}")
+        else:
+            print("No previous sessions found. Starting a new session.")
+            current_session_id = get_new_session_id()
+    else:
+        current_session_id = get_new_session_id()
 
     while True:
         try:
@@ -42,8 +65,9 @@ def main():
                 print("User prompt:", user_input)
 
             messages.append(types.Content(role="user", parts=[types.Part(text=user_input)]))
+            save_session(current_session_id, messages)
 
-            for iteration in range(20):
+            for iteration in range(50):
                 generate_config = types.GenerateContentConfig(
                     tools=[available_functions],
                     system_instruction=system_prompt,
@@ -63,6 +87,7 @@ def main():
                 if response.candidates:
                     for candidate in response.candidates:
                         messages.append(candidate.content)
+                    save_session(current_session_id, messages)
 
                 if response.function_calls:
                     # We need to save the results of these executions for the next lesson
@@ -97,6 +122,7 @@ def main():
                     
                     # 3. Append the tool execution results back to the conversation as the "user"
                     messages.append(types.Content(role="user", parts=function_results))
+                    save_session(current_session_id, messages)
                 else:
                     # 4. If there are no function calls, the agent has its final answer! 
                     print("Final response:")
