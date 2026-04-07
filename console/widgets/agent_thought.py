@@ -2,7 +2,7 @@ from textual.containers import VerticalGroup
 from textual.widgets import Collapsible, Static
 
 
-class AgentThought(VerticalGroup):
+class AgentThought(VerticalGroup, can_focus=False):
     def __init__(self) -> None:
         super().__init__()
         self._text = ""
@@ -10,6 +10,7 @@ class AgentThought(VerticalGroup):
 
     def compose(self):
         self._collapsible = Collapsible(self._body, title="Thinking", collapsed=False)
+        self._collapsible.can_focus = False
         yield self._collapsible
 
     def append_text(self, text: str) -> None:

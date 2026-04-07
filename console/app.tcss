@@ -15,6 +15,7 @@ Throbber {
 #conversation-scroll {
     height: 1fr;
     scrollbar-gutter: stable;
+    overflow-y: auto;
 }
 
 #conversation-content {
@@ -47,10 +48,16 @@ AgentResponse {
     color: $error;
 }
 
+.help-msg {
+    margin: 1 0 0 1;
+}
+
 /* Agent thought */
 AgentThought {
     margin: 0 0 0 1;
     height: auto;
+    max-height: 15;
+    overflow-y: hidden;
 
     Collapsible {
         border-left: tall #555555;
