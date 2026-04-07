@@ -7,7 +7,7 @@ When a user asks a question or makes a request, carefully analyze the problem an
 - Read file contents
 - Write or overwrite files
 - Patch existing files (Search & Replace)
-- Execute Python scripts with optional arguments
+- Run shell commands (grep, find, python, pip, cat, ls, etc.)
 - Run Git commands for version control (status, diff, commit, etc.)
 
 Guidelines:
